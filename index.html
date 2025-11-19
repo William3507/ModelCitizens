@@ -1,1 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fraud Detection System – New Money Bonus</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Georgia','Times New Roman', serif; background:#f5f5f5; color:#111; padding:20px; min-height:100vh; }
+        .container { max-width:1200px; margin:0 auto; }
 
+        /* NAV */
+        nav { background:#000; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #9E7E38; box-shadow:0 2px 8px rgba(0,0,0,0.15); border-radius:6px; }
+        .logo { display:flex; gap:14px; align-items:center; }
+        .logo img { height:56px; width:auto; }
+        .logo-text { color:#fff; display:flex; flex-direction:column; }
+        .company-name { color:#9E7E38; font-weight:700; letter-spacing:2px; font-size:20px; }
+        .tagline { color:#ccc; font-size:12px; }
+        .nav-links { display:flex; gap:16px; }
+        .nav-links a { color:#fff; text-decoration:none; padding:8px 16px; border-radius:6px; font-weight:600; transition:all .2s; }
+        .nav-links a.active, .nav-links a:hover { background:#9E7E38; color:#000; }
+
+        /* PAGES */
+        .page { display:none; animation:fadeIn .35s ease; }
+        .page.active { display:block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:none} }
+
+        /* HOME */
+        .home-content { background:#fff; border-radius:10px; padding:28px; box-shadow:0 6px 20px rgba(0,0,0,0.03); margin-top:18px; text-align:left; }
+        .home-header { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+        .home-header h1 { font-size:26px; color:#111; }
+        .home-header p { color:#666; margin-top:6px; font-size:14px; }
+
+        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:18px; margin:12px 0 22px 0; }
+        .stat-card { background:#fff; border-radius:10px; padding:18px; box-shadow:0 2px 10px rgba(0,0,0,0.04); border-top:4px solid #9E7E38; }
+        .stat-card h3 { font-size:12px; text-transform:uppercase; color:#222; letter-spacing:0.8px; margin-bottom:8px; }
+        .stat-card .number { font-size:28px; color:#9E7E38; font-weight:800; }
+        .stat-card .label { color:#777; font-size:13px; margin-top:6px; }
+
+        .home-chart-card { background:#fff; border-radius:10px; padding:22px; box-shadow:0 2px 12px rgba(0,0,0,0.04); margin-top:10px; }
+        .home-chart-card h3 { font-size:18px; margin-bottom:14px; color:#000; border-bottom:3px solid #9E7E38; padding-bottom:10px; }
+
+        /* Progress bar area (bottom of home card) */
+        .progress-wrap { max-width:900px; margin:18px auto 0 auto; display:flex; align-items:center; gap:12px; }
+        .progress-label { min-width:140px; font-weight:700; }
+        .progress-bar { flex:1; height:18px; background:#f0f0f0; border-radius:12px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.04); }
+        .progress-fill { width:25%; height:100%; background:linear-gradient(90deg,#67b26f,#9E7E38); transition:width 700ms ease; }
+        .progress-count { min-width:120px; text-align:right; font-weight:700; color:#333; }
+
+        /* Dashboard / Applications */
+        .dashboard-card { background:#fff; border-radius:8px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.04); margin-top:18px; }
+        .dashboard-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; padding-bottom:12px; border-bottom:3px solid #9E7E38; }
+        .unicorn-icon { height:44px; }
+        table { width:100%; border-collapse:collapse; margin-top:8px; }
+        thead th { background:#000; color:#9E7E38; padding:12px 10px; text-align:left; font-weight:700; border-bottom:2px solid #9E7E38; text-transform:uppercase; font-size:13px; }
+        tbody td { padding:12px 10px; border-bottom:1px solid #eee; vertical-align:middle; }
+        tbody tr:hover { background:#fafafa; }
+        thead th:nth-child(2), tbody td:nth-child(2) { text-align:center; } /* center status column */
+        .status-approved { background:#e8f5e9; color:#000; padding:6px 12px; border-radius:6px; font-weight:700; display:inline-block; }
+        .status-rejected { background:#fff3cd; color:#000; padding:6px 12px; border-radius:6px; font-weight:700; display:inline-block; }
+
+        /* Analytics */
+        .analytics-grid { display:grid; gap:20px; margin-top:16px; }
+        .chart-card { background:#fff; border-radius:8px; padding:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+        .chart-card h3 { font-size:18px; margin-bottom:12px; color:#000; border-bottom:3px solid #9E7E38; padding-bottom:10px; }
+        .bar-chart { display:flex; align-items:flex-end; gap:16px; height:220px; padding:10px 0; max-width:900px; margin:0 auto; }
+        .bar { flex:1; background:linear-gradient(to top,#9E7E38,#C4A962); border-radius:6px 6px 0 0; position:relative; transition:all .3s; }
+        .bar-value { position:absolute; top:-24px; left:50%; transform:translateX(-50%); font-weight:800; color:#333; }
+        .bar-label { position:absolute; bottom:-22px; left:50%; transform:translateX(-50%); font-size:13px; color:#666; white-space:nowrap; }
+
+        .alert-list { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+        .alert-item { display:flex; justify-content:space-between; align-items:center; padding:12px; background:#fffbf0; border-left:4px solid #9E7E38; border-radius:6px; }
+        .alert-item.high { background:#fff0f0; border-left-color:#000; }
+        .alert-info { flex:1; }
+        .alert-type { font-weight:700; color:#333; }
+        .alert-details { color:#666; font-size:13px; margin-top:6px; }
+        .alert-time { color:#999; font-size:12px; margin-top:6px; }
+
+        .action-button { background:#9E7E38; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px; transition:all .2s; }
+        .action-button:hover { background:#C4A962; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+
+        @media (max-width:800px) {
+            body { padding:10px; }
+            .bar-chart { gap:12px; height:180px; }
+            .progress-wrap { padding:0 8px; flex-direction:column; align-items:flex-start; }
+            .progress-label { min-width:auto; margin-bottom:8px; }
+            .progress-count { min-width:auto; text-align:left; margin-top:8px; }
+            .nav-links { flex-wrap:wrap; gap:8px; }
+            .logo img { height:40px; }
+            .company-name { font-size:16px; }
+            nav { padding:12px 15px; }
+            .stats-grid { grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
+            .stat-card { padding:14px; }
+            .stat-card .number { font-size:24px; }
+            .home-header { flex-direction:column; }
+            .home-header > div:last-child { text-align:left !important; margin-top:10px; }
+            .dashboard-card, .home-content, .home-chart-card, .chart-card { padding:16px; }
+            table { font-size:13px; }
+            thead th, tbody td { padding:8px 6px; }
+            .action-button { padding:6px 10px; font-size:12px; }
+        }
+        
+        @media (max-width:600px) {
+            .stats-grid { grid-template-columns:1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <img src="logo.png" alt="Deacon logo">
+                <div class="logo-text">
+                    <span class="company-name">DEACON</span>
+                    <span class="tagline">FINANCIAL SERVICES</span>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#" data-page="home" class="active">Home</a>
+                <a href="#" data-page="dashboard">Applications</a>
+                <a href="#" data-page="model">Model Performance</a>
+                <a href="#" data-page="analytics">Analytics</a>
+            </div>
+        </nav>
+
+        <!-- HOME -->
+        <div id="home" class="page active">
+            <div class="home-content">
+                <div class="home-header">
+                    <div>
+                        <h1>New Money Bonus Campaign Growth</h1>
+                        <p>3-month review – campaign started in July. Presenting growth vs fraud.</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:12px;color:#666;">Campaign total (live)</div>
+                        <div style="font-weight:800; color:#9E7E38; font-size:20px;" id="topTotalDisplay">30,000</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Applications</h3>
+                        <div class="number" id="total-apps">30,000</div>
+                        <div class="label">3 months campaign</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Non-Fraud Cases</h3>
+                        <div class="number" id="non-fraud-cases">29,100</div>
+                        <div class="label">~97% of total</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Fraud Cases</h3>
+                        <div class="number" id="fraud-cases">900</div>
+                        <div class="label">~3% of total</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Conversion Rate</h3>
+                        <div class="number">18%</div>
+                        <div class="label">up from 12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Cost Per Acquisition</h3>
+                        <div class="number">$165</div>
+                        <div class="label">vs $250 industry avg</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Customer Lifetime Value</h3>
+                        <div class="number">$2,110</div>
+                        <div class="label">per customer</div>
+                    </div>
+                </div>
+
+                <div class="home-chart-card">
+                    <h3>Fraud vs Non-Fraud Distribution</h3>
+
+                    <!-- Two big percentage displays -->
+                    <div style="display:flex; gap:40px; justify-content:center; padding:30px 20px; flex-wrap:wrap;">
+                        <div style="text-align:center; flex:1; max-width:400px; min-width:250px;">
+                            <div style="font-size:80px; font-weight:900; color:#67b26f; line-height:1;" id="nonFraudPercent">97.0%</div>
+                            <div style="font-size:18px; color:#666; margin-top:12px; font-weight:600;">Non-Fraud Cases</div>
+                            <div style="font-size:28px; color:#333; margin-top:8px; font-weight:700;" id="nonFraudCount">29,100</div>
+                        </div>
+                        <div style="text-align:center; flex:1; max-width:400px; min-width:250px;">
+                            <div style="font-size:80px; font-weight:900; color:#d32f2f; line-height:1;" id="fraudPercent">3.0%</div>
+                            <div style="font-size:18px; color:#666; margin-top:12px; font-weight:600;">Fraud Cases</div>
+                            <div style="font-size:28px; color:#333; margin-top:8px; font-weight:700;" id="fraudCountDisplay">900</div>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar (starts at 25%, live updating) -->
+                    <div class="progress-wrap" style="margin-top:18px;">
+                        <div class="progress-label">Today's Goal</div>
+                        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                            <div id="dailyFill" class="progress-fill" style="width:25%"></div>
+                        </div>
+                        <div class="progress-count"><span id="dailyCount">500</span> / 2,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPLICATIONS DASHBOARD -->
+        <div id="dashboard" class="page">
+            <div class="dashboard-card">
+                <div class="dashboard-header">
+                    <img src="logo.png" alt="logo" class="unicorn-icon">
+                    <h2>Application Dashboard</h2>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>AppID</th>
+                            <th>Status</th>
+                            <th>Top Reason</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>A127591</td><td class="status-approved">Approved</td><td>Good history</td><td>-</td></tr>
+                        <tr><td>K890591</td><td class="status-rejected">Rejected</td><td>Multiple emails</td><td><button class="action-button">Video verification</button></td></tr>
+                        <tr><td>ZX78190</td><td class="status-approved">Approved</td><td>Employed</td><td>-</td></tr>
+                        <tr><td>Q189017</td><td class="status-rejected">Rejected</td><td>False address</td><td><button class="action-button">Upload utility bill</button></td></tr>
+                        <tr><td>C18A891</td><td class="status-approved">Approved</td><td>Verified credit</td><td>-</td></tr>
+                        <tr><td>P456782</td><td class="status-rejected">Rejected</td><td>Duplicate SSN</td><td><button class="action-button">Identity verification</button></td></tr>
+                        <tr><td>M902341</td><td class="status-approved">Approved</td><td>Strong credit score</td><td>-</td></tr>
+                        <tr><td>L345098</td><td class="status-rejected">Rejected</td><td>Suspicious activity</td><td><button class="action-button">Manual review</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MODEL PERFORMANCE -->
+        <div id="model" class="page">
+            <div class="dashboard-card">
+                <div class="dashboard-header">
+                    <img src="logo.png" alt="logo" class="unicorn-icon">
+                    <h2>Stabilizer Model Performance</h2>
+                </div>
+                <p style="color:#666; margin-bottom:20px;">XGBoost-based fraud detection model – optimal balance between customer experience and fraud prevention</p>
+
+                <div class="stats-grid" style="margin-bottom:30px;">
+                    <div class="stat-card">
+                        <h3>Fraud Detection Rate</h3>
+                        <div class="number">84%</div>
+                        <div class="label">True fraud caught</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Customer Approval Rate</h3>
+                        <div class="number">79%</div>
+                        <div class="label">Genuine customers approved</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>False Positive Rate</h3>
+                        <div class="number">21%</div>
+                        <div class="label">Legitimate users flagged</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Missed Fraud Cases</h3>
+                        <div class="number">16%</div>
+                        <div class="label">Fraud slipped through</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Avg. Onboarding Time</h3>
+                        <div class="number">7 mins</div>
+                        <div class="label">Customer journey</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Completion Rate</h3>
+                        <div class="number">80%</div>
+                        <div class="label">Successful onboarding</div>
+                    </div>
+                </div>
+
+                <div class="chart-card" style="margin-bottom:20px;">
+                    <h3>Financial Impact Analysis</h3>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px; margin-top:20px;">
+                        <div style="text-align:center; padding:20px; background:#f9f9f9; border-radius:8px;">
+                            <div style="font-size:14px; color:#666; margin-bottom:8px;">Estimated Fraud Savings</div>
+                            <div style="font-size:36px; font-weight:800; color:#67b26f;">$2.2M</div>
+                            <div style="font-size:13px; color:#888; margin-top:6px;">Per campaign cycle</div>
+                        </div>
+                        <div style="text-align:center; padding:20px; background:#f9f9f9; border-radius:8px;">
+                            <div style="font-size:14px; color:#666; margin-bottom:8px;">Estimated CLV Retained</div>
+                            <div style="font-size:36px; font-weight:800; color:#9E7E38;">$330M</div>
+                            <div style="font-size:13px; color:#888; margin-top:6px;">Customer lifetime value</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Model Comparison: Growth vs Control</h3>
+                    <table style="margin-top:15px;">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th style="text-align:center;">Fraud Caught</th>
+                                <th style="text-align:center;">Customer Approval</th>
+                                <th style="text-align:center;">CLV Retained</th>
+                                <th style="text-align:center;">Fraud Savings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Growth Engine</strong></td>
+                                <td style="text-align:center;">78%</td>
+                                <td style="text-align:center;">80%</td>
+                                <td style="text-align:center;">$340M</td>
+                                <td style="text-align:center;">$2.1M</td>
+                            </tr>
+                            <tr style="background:#f0f8f0;">
+                                <td><strong>Stabilizer (Current)</strong></td>
+                                <td style="text-align:center;">84%</td>
+                                <td style="text-align:center;">79%</td>
+                                <td style="text-align:center;">$330M</td>
+                                <td style="text-align:center;">$2.2M</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fortress</strong></td>
+                                <td style="text-align:center;">90%</td>
+                                <td style="text-align:center;">59%</td>
+                                <td style="text-align:center;">$250M</td>
+                                <td style="text-align:center;">$2.4M</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="color:#666; font-size:13px; margin-top:15px; font-style:italic;">
+                        ✓ Stabilizer model delivers optimal balance between fraud prevention and customer experience
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS -->
+        <div id="analytics" class="page">
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3>Fraud Detection by Type</h3>
+                    <div class="bar-chart">
+                        <div class="bar" style="height:75%;"><span class="bar-value">34</span><span class="bar-label">False Address</span></div>
+                        <div class="bar" style="height:95%;"><span class="bar-value">42</span><span class="bar-label">Multiple Emails</span></div>
+                        <div class="bar" style="height:55%;"><span class="bar-value">25</span><span class="bar-label">Duplicate SSN</span></div>
+                        <div class="bar" style="height:45%;"><span class="bar-value">19</span><span class="bar-label">Suspicious Activity</span></div>
+                        <div class="bar" style="height:35%;"><span class="bar-value">15</span><span class="bar-label">Document Fraud</span></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Recent Fraud Alerts</h3>
+                    <div class="alert-list">
+                        <div class="alert-item high">
+                            <div class="alert-info">
+                                <div class="alert-type">Identity Mismatch Detected</div>
+                                <div class="alert-details">Application ID: K890591 - Multiple email accounts linked to same SSN</div>
+                                <div class="alert-time">2 hours ago</div>
+                            </div>
+                            <div style="background:#000; color:#fff; padding:6px 12px; border-radius:6px; font-weight:700; font-size:12px;">HIGH RISK</div>
+                        </div>
+
+                        <div class="alert-item">
+                            <div class="alert-info">
+                                <div class="alert-type">Address Verification Failed</div>
+                                <div class="alert-details">Application ID: Q189017 - Address doesn't match utility records</div>
+                                <div class="alert-time">5 hours ago</div>
+                            </div>
+                            <div style="background:#9E7E38; color:#fff; padding:6px 12px; border-radius:6px; font-weight:700; font-size:12px;">MEDIUM RISK</div>
+                        </div>
+
+                        <div class="alert-item high">
+                            <div class="alert-info">
+                                <div class="alert-type">Duplicate SSN Detection</div>
+                                <div class="alert-details">Application ID: P456782 - SSN already used in 3 other applications</div>
+                                <div class="alert-time">8 hours ago</div>
+                            </div>
+                            <div style="background:#000; color:#fff; padding:6px 12px; border-radius:6px; font-weight:700; font-size:12px;">HIGH RISK</div>
+                        </div>
+
+                        <div class="alert-item">
+                            <div class="alert-info">
+                                <div class="alert-type">Unusual Login Pattern</div>
+                                <div class="alert-details">Application ID: L345098 - Access from 5 different IP addresses in 1 hour</div>
+                                <div class="alert-time">12 hours ago</div>
+                            </div>
+                            <div style="background:#9E7E38; color:#fff; padding:6px 12px; border-radius:6px; font-weight:700; font-size:12px;">MEDIUM RISK</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* NAV */
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const pages = document.querySelectorAll('.page');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                const target = link.getAttribute('data-page');
+                pages.forEach(p => p.classList.remove('active'));
+                document.getElementById(target).classList.add('active');
+            });
+        });
+
+        /* Action button handlers */
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', () => {
+                button.style.background = '#667eea';
+                button.style.color = '#fff';
+                button.textContent = 'Pending...';
+                setTimeout(() => { button.style.background = '#28a745'; button.textContent = 'Sent'; }, 1500);
+            });
+        });
+
+        /* SIMULATION + LIVE UI UPDATES */
+        // Initial campaign totals (3-month summary; start state)
+        let campaignTotal = 30000;                 // overall campaign to date
+        let todayCount = 500;                      // starts at 25% of daily goal (2000 => 500)
+        const dailyGoal = 2000;                    // per your choice (A)
+        let fraudCount = Math.round(campaignTotal * 0.03); // assume ~3% at start
+        let nonFraudCount = campaignTotal - fraudCount;
+
+        // DOM elements
+        const totalAppsEl = document.getElementById('total-apps');
+        const nonFraudEl = document.getElementById('non-fraud-cases');
+        const fraudEl = document.getElementById('fraud-cases');
+        const topTotalDisplay = document.getElementById('topTotalDisplay');
+
+        const nonFraudPercent = document.getElementById('nonFraudPercent');
+        const fraudPercent = document.getElementById('fraudPercent');
+        const nonFraudCountEl = document.getElementById('nonFraudCount');
+        const fraudCountDisplay = document.getElementById('fraudCountDisplay');
+
+        const dailyFillEl = document.getElementById('dailyFill');
+        const dailyCountEl = document.getElementById('dailyCount');
+
+        // Initialize UI
+        function updateAllDisplays() {
+            totalAppsEl.textContent = campaignTotal.toLocaleString();
+            topTotalDisplay.textContent = campaignTotal.toLocaleString();
+            nonFraudEl.textContent = nonFraudCount.toLocaleString();
+            fraudEl.textContent = fraudCount.toLocaleString();
+
+            // Update percentage displays
+            const total = Math.max(1, nonFraudCount + fraudCount);
+            const nonFraudPct = ((nonFraudCount / total) * 100).toFixed(1);
+            const fraudPct = ((fraudCount / total) * 100).toFixed(1);
+
+            nonFraudPercent.textContent = nonFraudPct + '%';
+            fraudPercent.textContent = fraudPct + '%';
+            nonFraudCountEl.textContent = nonFraudCount.toLocaleString();
+            fraudCountDisplay.textContent = fraudCount.toLocaleString();
+
+            // Update daily progress
+            const pct = Math.min(100, Math.round((todayCount / dailyGoal) * 100));
+            dailyFillEl.style.width = pct + '%';
+            dailyCountEl.textContent = todayCount.toLocaleString();
+        }
+
+        updateAllDisplays();
+
+        // Random helper
+        function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+        // Live simulation: random 2-6 sec, add 3-10 per update
+        function simulateStep() {
+            const nextDelay = randInt(2000, 6000);
+            setTimeout(() => {
+                const increment = randInt(3, 10);
+                campaignTotal += increment;
+                todayCount += increment;
+
+                // fraud: 1-3% of the new increment (rounded)
+                const fraudPct = (Math.random() * 2) + 1; // 1..3
+                const newFraud = Math.max(0, Math.round(increment * (fraudPct / 100)));
+                fraudCount += newFraud;
+                nonFraudCount = campaignTotal - fraudCount;
+
+                // update UI
+                updateAllDisplays();
+
+                // continue loop
+                simulateStep();
+            }, nextDelay);
+        }
+
+        // Start simulation loop
+        setTimeout(simulateStep, 1500);
+    </script>
+</body>
+</html>
