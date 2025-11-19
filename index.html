@@ -79,12 +79,17 @@
         .action-button { background:#9E7E38; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px; transition:all .2s; }
         .action-button:hover { background:#C4A962; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
 
+        /* Scrollable table wrapper */
+        .table-scroll { overflow-x:auto; max-width:100%; }
+
         @media (max-width:800px) {
             body { padding:10px; }
-            .bar-chart { gap:12px; height:180px; }
-            .progress-wrap { padding:0 8px; flex-direction:column; align-items:flex-start; }
-            .progress-label { min-width:auto; margin-bottom:8px; }
-            .progress-count { min-width:auto; text-align:left; margin-top:8px; }
+            .bar-chart { gap:8px; height:180px; }
+            .bar-label { font-size:10px; white-space:normal; text-align:center; max-width:60px; }
+            .bar-value { font-size:13px; }
+            .progress-wrap { padding:0 8px; }
+            .progress-label { font-size:14px; }
+            .progress-count { font-size:14px; }
             .nav-links { flex-wrap:wrap; gap:8px; }
             .logo img { height:40px; }
             .company-name { font-size:16px; }
@@ -102,6 +107,8 @@
         
         @media (max-width:600px) {
             .stats-grid { grid-template-columns:1fr 1fr; }
+            .bar-chart { gap:6px; }
+            .bar-label { font-size:9px; max-width:50px; }
         }
     </style>
 </head>
@@ -290,40 +297,42 @@
 
                 <div class="chart-card">
                     <h3>Model Comparison: Growth vs Control</h3>
-                    <table style="margin-top:15px;">
-                        <thead>
-                            <tr>
-                                <th>Model</th>
-                                <th style="text-align:center;">Fraud Caught</th>
-                                <th style="text-align:center;">Customer Approval</th>
-                                <th style="text-align:center;">CLV Retained</th>
-                                <th style="text-align:center;">Fraud Savings</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Growth Engine</strong></td>
-                                <td style="text-align:center;">78%</td>
-                                <td style="text-align:center;">80%</td>
-                                <td style="text-align:center;">$340M</td>
-                                <td style="text-align:center;">$2.1M</td>
-                            </tr>
-                            <tr style="background:#f0f8f0;">
-                                <td><strong>Stabilizer (Current)</strong></td>
-                                <td style="text-align:center;">84%</td>
-                                <td style="text-align:center;">79%</td>
-                                <td style="text-align:center;">$330M</td>
-                                <td style="text-align:center;">$2.2M</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Fortress</strong></td>
-                                <td style="text-align:center;">90%</td>
-                                <td style="text-align:center;">59%</td>
-                                <td style="text-align:center;">$250M</td>
-                                <td style="text-align:center;">$2.4M</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-scroll">
+                        <table style="margin-top:15px;">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th style="text-align:center;">Fraud Caught</th>
+                                    <th style="text-align:center;">Customer Approval</th>
+                                    <th style="text-align:center;">CLV Retained</th>
+                                    <th style="text-align:center;">Fraud Savings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Growth Engine</strong></td>
+                                    <td style="text-align:center;">78%</td>
+                                    <td style="text-align:center;">80%</td>
+                                    <td style="text-align:center;">$340M</td>
+                                    <td style="text-align:center;">$2.1M</td>
+                                </tr>
+                                <tr style="background:#f0f8f0;">
+                                    <td><strong>Stabilizer (Current)</strong></td>
+                                    <td style="text-align:center;">84%</td>
+                                    <td style="text-align:center;">79%</td>
+                                    <td style="text-align:center;">$330M</td>
+                                    <td style="text-align:center;">$2.2M</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fortress</strong></td>
+                                    <td style="text-align:center;">90%</td>
+                                    <td style="text-align:center;">59%</td>
+                                    <td style="text-align:center;">$250M</td>
+                                    <td style="text-align:center;">$2.4M</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <p style="color:#666; font-size:13px; margin-top:15px; font-style:italic;">
                         ✓ Stabilizer model delivers optimal balance between fraud prevention and customer experience
                     </p>
